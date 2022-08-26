@@ -1,23 +1,21 @@
 class RecipesController < ApplicationController
-rescue_from ActiveRecord::RecordInvalid, with: :render_unprocessable_entity
 
     def index 
-        recipes = Recipe.all
-        render json: recipes 
+        user = User.find(session[:user_id])
+        recipes = user.recipes
+        render json: recipes
     end
 
     def create 
-        recipe = Recipe.create!(recipe_params, user_id: session[:user_id])
+        user = User.find_by(id: session[:user_id])
+        recipe = user.recipes.create!(recipe_params)
         render json: recipe, status: :created 
     end
 
     private 
 
     def recipe_params 
-        params.permit(:title, :instruction, :minutes_to_complete)
+        params.permit(:title, :instructions, :minutes_to_complete)
     end
 
-    def render_unprocessable_entity(invalid) 
-        render json: { error: invalid.record.errors }, status: :unprocessable_entity 
-    end
 end
