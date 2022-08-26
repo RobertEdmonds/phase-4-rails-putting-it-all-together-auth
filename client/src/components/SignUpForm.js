@@ -35,7 +35,7 @@ function SignUpForm({ onLogin }) {
       }
     });
   }
-
+  console.log(errors)
   return (
     <form onSubmit={handleSubmit}>
       <FormField>
